@@ -12,7 +12,7 @@ class SubViewController: UIViewController {
     
     @IBOutlet fileprivate var tableView: RSTableView!
     
-    var canScroll = true
+    var canScroll = false
     var setCanScrollBlock: ((_ canScroll: Bool) -> Void)?
     /// 标志区分不同的控制器
     var mark = 0

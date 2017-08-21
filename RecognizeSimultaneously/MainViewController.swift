@@ -13,9 +13,10 @@ class MainCell: UITableViewCell {
     @IBOutlet private var scrollView: UIScrollView!
     
     private var viewControllers = [Int: UIViewController]()
-    private var parentVC: MainViewController?
-    private let childVCTitles = ["viewController1", "viewController2"]
+    private var childVCTitles = [String]()
+    fileprivate var parentVC: MainViewController?
     fileprivate var currentIndex = 0
+    fileprivate var canScroll = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -34,12 +35,22 @@ class MainCell: UITableViewCell {
     
     @objc private func setScrollStatus(_ notify: Notification) {
         if let canScroll = notify.userInfo?["canScroll"] as? Bool {
+            self.canScroll = canScroll
             for (_, value) in viewControllers {
                 if let vc = value as? SubViewController {
                     vc.canScroll = canScroll
                 }
             }
         }
+    }
+    
+    private func changeToIndex(_ index: Int) {
+        if index != currentIndex {
+            currentIndex = index
+            scrollView.addSubview(viewAtIndex(index).view)
+            parentVC?.filterView?.changeSelectIndex(index)
+        }
+        self.scrollView.setContentOffset(CGPoint(x: contentView.frame.width * CGFloat(index), y: 0), animated: false)
     }
     
     fileprivate func viewAtIndex(_ index: Int) -> UIViewController {
@@ -50,7 +61,7 @@ class MainCell: UITableViewCell {
                 if let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SubViewController") as? SubViewController {
                     viewController.view.frame = CGRect(x: scrollView.frame.width * CGFloat(index), y: 0, width: scrollView.frame.width, height: scrollView.frame.height)
                     viewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin]
-                    viewController.canScroll = parentVC?.canScroll ?? true
+                    viewController.canScroll = canScroll
                     viewController.setCanScrollBlock = {[weak self] canScroll in
                         self?.parentVC?.canScroll = canScroll
                     }
@@ -64,8 +75,12 @@ class MainCell: UITableViewCell {
         return UIViewController()
     }
     
-    func updateCell(_ parentVC: MainViewController) {
+    func updateCell(_ parentVC: MainViewController, _ childVCTitles: [String]) {
         self.parentVC = parentVC
+        self.parentVC?.selectBlock = {[weak self] index in
+            self?.changeToIndex(index)
+        }
+        self.childVCTitles = childVCTitles
         scrollView.contentSize = CGSize(width: contentView.frame.width * CGFloat(childVCTitles.count), height: 0)
         scrollView.addSubview(viewAtIndex(currentIndex).view)
     }
@@ -76,8 +91,15 @@ extension MainCell: UIScrollViewDelegate {
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let newIndex = Int((scrollView.contentOffset.x + contentView.frame.width * 0.5) / contentView.frame.width)
-        currentIndex = newIndex
-        scrollView.addSubview(viewAtIndex(newIndex).view)
+        if newIndex != currentIndex {
+            currentIndex = newIndex
+            scrollView.addSubview(viewAtIndex(newIndex).view)
+            parentVC?.filterView?.changeSelectIndex(currentIndex)
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        parentVC?.filterView?.changeLineViewWithOffset(scrollView.contentOffset.x)
     }
     
 }
@@ -86,6 +108,9 @@ class MainViewController: UIViewController {
 
     @IBOutlet private var tableView: RSTableView!
     
+    var filterView: FilterBarView?
+    fileprivate var selectBlock: ((_ index: Int) -> Void)?
+    fileprivate let childVCTitles = ["ViewController1", "ViewController2"]
     fileprivate let tableHeaderHeight: CGFloat = 100 //子控制器切换栏
     fileprivate var canScroll = true
     
@@ -108,7 +133,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
+        return 35
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -116,8 +141,12 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 40))
-        headerView.backgroundColor = UIColor(white: 246 / 255, alpha: 1.0)
+        let headerView = FilterBarView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 35), titles: childVCTitles)
+        headerView.autoresizingMask = .flexibleWidth
+        headerView.selectBlock = { [weak self] index in
+            self?.selectBlock?(index)
+        }
+        filterView = headerView
         return headerView
     }
     
@@ -127,7 +156,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "MainCell", for: indexPath) as? MainCell {
-            cell.updateCell(self)
+            cell.updateCell(self, childVCTitles)
             return cell
         }
         return UITableViewCell()

@@ -16,6 +16,7 @@
 		05D18D3E1E94CDFA009021CD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 05D18D3C1E94CDFA009021CD /* LaunchScreen.storyboard */; };
 		05D18D491E94CDFA009021CD /* RecognizeSimultaneouslyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D18D481E94CDFA009021CD /* RecognizeSimultaneouslyTests.swift */; };
 		05D18D541E94CDFA009021CD /* RecognizeSimultaneouslyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D18D531E94CDFA009021CD /* RecognizeSimultaneouslyUITests.swift */; };
+		05D3AF2B1F49C0D7005A8F00 /* FilterBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D3AF2A1F49C0D7005A8F00 /* FilterBarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		05D18D4F1E94CDFA009021CD /* RecognizeSimultaneouslyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecognizeSimultaneouslyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		05D18D531E94CDFA009021CD /* RecognizeSimultaneouslyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizeSimultaneouslyUITests.swift; sourceTree = "<group>"; };
 		05D18D551E94CDFA009021CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		05D3AF2A1F49C0D7005A8F00 /* FilterBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				053D09081EA8489E006F1422 /* SubViewController.swift */,
 				05D18D371E94CDFA009021CD /* Main.storyboard */,
 				05C513E31EA46E830080A7E2 /* RSTableView.swift */,
+				05D3AF2A1F49C0D7005A8F00 /* FilterBarView.swift */,
 				05D18D3A1E94CDFA009021CD /* Assets.xcassets */,
 				05D18D3C1E94CDFA009021CD /* LaunchScreen.storyboard */,
 				05D18D3F1E94CDFA009021CD /* Info.plist */,
@@ -272,6 +275,7 @@
 				05C513E41EA46E830080A7E2 /* RSTableView.swift in Sources */,
 				0551AD9A1E94D18B0021C31F /* MainViewController.swift in Sources */,
 				053D09091EA8489E006F1422 /* SubViewController.swift in Sources */,
+				05D3AF2B1F49C0D7005A8F00 /* FilterBarView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
