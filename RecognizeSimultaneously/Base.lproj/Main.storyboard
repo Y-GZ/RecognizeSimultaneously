@@ -43,7 +43,19 @@
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="EIv-at-ZQ3">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <color key="backgroundColor" red="0.8542650324367641" green="0.29657065597209659" blue="0.97825580835342407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HeaderView" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SPN-po-LaY">
+                                            <rect key="frame" x="138" y="40" width="98.5" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstItem="SPN-po-LaY" firstAttribute="centerX" secondItem="EIv-at-ZQ3" secondAttribute="centerX" id="OLg-c3-7D3"/>
+                                        <constraint firstItem="SPN-po-LaY" firstAttribute="centerY" secondItem="EIv-at-ZQ3" secondAttribute="centerY" id="ftG-bs-bIw"/>
+                                    </constraints>
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MainCell" rowHeight="110" id="mW7-0R-cLn" customClass="MainCell" customModule="RecognizeSimultaneously" customModuleProvider="target">
