@@ -65,7 +65,7 @@ class MainCell: UITableViewCell {
                     viewController.setCanScrollBlock = {[weak self] canScroll in
                         self?.parentVC?.canScroll = canScroll
                     }
-                    viewController.mark = index * 5 + 1
+                    viewController.mark = index * 6 + 3
                     viewControllers[index] = viewController
                     parentVC?.addChildViewController(viewController)
                     return viewController

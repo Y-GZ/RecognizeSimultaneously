@@ -19,8 +19,9 @@ class FilterBarView: UIView {
         return view
     }()
     
-    private var titles = [String]()
     fileprivate var buttons = [UIButton]()
+    fileprivate var observerTags = [Int]()
+    private var titles = [String]()
     private var selectIndex = 0
     private var maxWidth: CGFloat = 0
     private var perfixCenterX: CGFloat = 0
@@ -36,6 +37,10 @@ class FilterBarView: UIView {
         createSubViews()
     }
     
+    deinit {
+        removeAllObserver()
+    }
+    
     //MARK: - Action
     private func createSubViews() {
         backgroundColor = UIColor(white: 245 / 255.0, alpha: 1.0)
@@ -44,7 +49,7 @@ class FilterBarView: UIView {
             button.frame = CGRect(x: bounds.width / CGFloat(titles.count) * CGFloat(i), y: 0, width: bounds.width / CGFloat(titles.count), height: bounds.height)
             button.autoresizingMask = [.flexibleWidth, .flexibleLeftMargin, .flexibleRightMargin]
             button.backgroundColor = UIColor.clear
-            button.tag = 10000 + i
+            button.tag = 1000 + i
             button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
             button.setTitleColor(UIColor(red: 51 / 255, green: 51 / 255, blue: 51 / 255, alpha: 1.0), for: .normal)
             button.setTitleColor(UIColor(red: 0 / 255, green: 168 / 255, blue: 255 / 255, alpha: 1.0), for: .selected)
@@ -58,13 +63,12 @@ class FilterBarView: UIView {
                 addFrameObserve(button)
             }
         }
-        getPerWidth()
         addSubview(barLineView)
     }
     
     @objc private func buttonAction(_ sender: UIButton) {
         addFrameObserve(sender)
-        selectIndex = max(sender.tag - 10000, 0)
+        selectIndex = max(sender.tag - 1000, 0)
         selectBlock?(selectIndex)
     }
     
@@ -76,12 +80,16 @@ class FilterBarView: UIView {
     }
     
     private func addFrameObserve(_ sender: UIButton) {
-        barLineView.center.x = sender.center.x
+        removeAllObserver()
+        addObserver(self, forKeyPath: "frame", options: [.initial, .new], context: &selfContext)
+        observerTags.append(999)
+        sender.addObserver(self, forKeyPath: "frame", options: [.initial, .new], context: &buttonContext)
+        observerTags.append(sender.tag)
     }
     
     func changeSelectIndex(_ index: Int) {
         for i in 0..<titles.count {
-            if let button = viewWithTag(10000 + i) as? UIButton {
+            if let button = viewWithTag(1000 + i) as? UIButton {
                 if i == index {
                     button.isSelected = true
                     addFrameObserve(button)
@@ -98,4 +106,42 @@ class FilterBarView: UIView {
         barLineView.center.x = perfixCenterX + realWidth
     }
     
+}
+
+// MARK: - KVO
+extension FilterBarView {
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        DispatchQueue.main.async {
+            if context == &buttonContext {
+                if let value = change?[NSKeyValueChangeKey.newKey] as? CGRect {
+                    self.barLineView.center.x = value.origin.x + (value.width / 2)
+                }
+            } else if context == &selfContext {
+                self.getPerWidth()
+            }
+        }
+    }
+    
+    fileprivate func removeAllObserver() {
+        let tempTags = observerTags
+        for tag in tempTags {
+            if tag == 999 {
+                removeObserver(self, forKeyPath: "frame")
+                removeObserverForTag(tag)
+            } else if let button = viewWithTag(tag) as? UIButton {
+                button.removeObserver(self, forKeyPath: "frame")
+                removeObserverForTag(tag)
+            }
+        }
+    }
+    
+    private func removeObserverForTag(_ tag: Int) {
+        for (index, item) in zip(0..<observerTags.count, observerTags) {
+            if item == tag {
+                observerTags.remove(at: index)
+                break
+            }
+        }
+    }
 }
