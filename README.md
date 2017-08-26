@@ -1,5 +1,5 @@
 # RecognizeSimultaneously
-## 该Demo实现了类似于微博客户端发现频道的效果
+## 该Demo实现了类似于微博客户端发现频道的嵌套滑动效果
 ### 描述
 - 框架为一个tableView，该TableView只有一个Cell，Cell上一个scrollView用于展示添加子分类tableView列表，可左右滑动切换分类；
 - 此种两个tableView之间的嵌套滑动控制主要是实现UIGestureRecognizerDelegate中的方法：
