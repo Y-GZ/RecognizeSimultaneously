@@ -110,8 +110,8 @@ class MainViewController: UIViewController {
     
     var filterView: FilterBarView?
     fileprivate var selectBlock: ((_ index: Int) -> Void)?
-    fileprivate let childVCTitles = ["ViewController1", "ViewController2"]
-    fileprivate let tableHeaderHeight: CGFloat = 100 //子控制器切换栏
+    fileprivate let childVCTitles = ["ViewController1", "ViewController2", "ViewController3"]
+    fileprivate let tableHeaderHeight: CGFloat = 160
     fileprivate var canScroll = true
     
     override func viewDidLoad() {
@@ -151,7 +151,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return view.bounds.height - tableHeaderHeight
+        return tableView.bounds.height - 35
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
